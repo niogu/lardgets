@@ -1,10 +1,11 @@
 {
     "devDependencies": {
-        "webpack": "^4.41.5"
+        "webpack": "^4.41.5",
+        "webpack-cli": "^4.2.0"
     },
     "scripts": {
-        "prod": "node_modules/.bin/webpack -p",
-        "prod-watch": "node_modules/.bin/webpack -p --watch"
+        "prod": "node_modules/.bin/webpack --mode production",
+        "prod-watch": "node_modules/.bin/webpack --mode production --watch"
     },
     "dependencies": {
         "axios": "^0.19.2"

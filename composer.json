@@ -1,0 +1,23 @@
+{
+    "name": "niogu/lardgets",
+    "license": "MIT",
+    "require": {
+        "mck89/peast": "~1.7",
+        "ext-dom": "*"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Niogu\\Lardgets\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Niogu\\Lardgets\\LardgetsServiceProvider"
+            ]
+        }
+    }
+}

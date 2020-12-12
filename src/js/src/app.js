@@ -85,15 +85,17 @@ class WidgetRunner {
         });
     }
 
-    loadJs(src) {
-        return new Promise((resolve, reject) => {
-            var script = document.createElement('script');
-            script.onload = function() {
-                resolve();
-            };
-            script.src = src;
-            document.getElementsByTagName('head')[0].appendChild(script);
-        });
+    loadJs(src, ifndef) {
+        if(!ifndef) {
+            return new Promise((resolve, reject) => {
+                var script = document.createElement('script');
+                script.onload = function () {
+                    resolve();
+                };
+                script.src = src;
+                document.getElementsByTagName('head')[0].appendChild(script);
+            });
+        }
     }
 
     loadCss(src) {

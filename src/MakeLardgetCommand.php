@@ -68,10 +68,10 @@ class $name extends Lardget {
 
     public function render()
     {
-        return \$this->blade('
-            <div v-pre>
+        return \$this->blade(<<<'blade'
+            <div>
             </div>
-        ');
+        blade, get_defined_vars());
     }
 }
 ";

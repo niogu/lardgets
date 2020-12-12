@@ -19,5 +19,14 @@
                 "Niogu\\Lardgets\\LardgetsServiceProvider"
             ]
         }
+    },
+    "repositories": {
+        "local": {
+            "type": "path",
+            "url": "",
+            "options": {
+                "symlink": true
+            }
+        }
     }
 }

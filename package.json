@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "build-js": "cd src/js && npm i && npm run prod"
+  }
+}

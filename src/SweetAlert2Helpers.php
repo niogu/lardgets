@@ -46,7 +46,7 @@ class SweetAlert2Helpers
 
         $param = [
             'title' => $text,
-            'input' => $options['input'] ?? 'text',
+            'input' => $options['input'] ?? null,
             'inputPlaceholder' => '',
             'inputValue' => $options['value'] ?? null,
             'html' => $options['html'] ?? null,

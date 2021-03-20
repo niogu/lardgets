@@ -81,7 +81,7 @@ class SweetAlert2Helpers
     {
         $param = [
             'title' => data_get($options, 'title'),
-            'text' => e($text),
+            'html' => e($text),
             'showCancelButton' => $showCancel,
         ];
 

@@ -32,7 +32,7 @@ class LardgetsServiceProvider extends ServiceProvider
         })->middleware('web');
 
         \Route::macro('lardget', function($route, $name) use ($router) {
-            $router->get($route, function() use ($name) {
+            return $router->get($route, function() use ($name) {
                 return app(\Niogu\Lardgets\LardgetController::class)->lardgetRoute($name);
             })->middleware('web');
         });

@@ -10,6 +10,7 @@ use Peast\Formatter\Compact;
 use Peast\Peast;
 use Peast\Syntax\Node\ArrayExpression;
 use Peast\Syntax\Node\BigIntLiteral;
+use Peast\Syntax\Node\CallExpression;
 use Peast\Syntax\Node\ExpressionStatement;
 use Peast\Syntax\Node\NumericLiteral;
 use Peast\Syntax\Node\Program;
@@ -48,21 +49,22 @@ class LardgetHtmlCompiler
         $found = false;
         /** @var Program $ast */
         $ast = Peast::latest("function event() { $onClick }", [])->parse();
-        $body = $ast->getBody()[0]->getBody()->getBody();
-        foreach($body as $i => $elt) {
-            if(!($elt instanceof ExpressionStatement)) {
-                continue;
+
+        $traverser = new \Peast\Traverser;
+        $traverser->addFunction(function ($elt) use ($ast, $params, $nextCallParams, &$found) {
+            if(!($elt instanceof CallExpression)) {
+                return;
             }
 
             try {
-                $callee = $elt->getExpression()->getCallee();
+                $callee = $elt->getCallee();
                 $calleeName = $callee->getObject()->getName();
             } catch (\Error $e) {
-                continue;
+                return;
             }
 
             if($calleeName !== '$w') {
-                continue;
+                return;
             }
 
             /** @var \Peast\Syntax\Node\MemberExpression $callee */
@@ -71,9 +73,9 @@ class LardgetHtmlCompiler
             $placeHolderExprs = [];
 
             $params2 = array_merge(['method' => $methodName], $params);
-            if(count($elt->getExpression()->getArguments()) > 0) {
+            if(count($elt->getArguments()) > 0) {
                 $params2['call_params'] = $nextCallParams;
-                foreach($elt->getExpression()->getArguments() as $pos => $arg) {
+                foreach($elt->getArguments() as $pos => $arg) {
                     if($arg instanceof StringLiteral || $arg instanceof NumericLiteral) {
                         $params2['call_params'] []= $arg->getValue();
                         continue;
@@ -86,21 +88,24 @@ class LardgetHtmlCompiler
             }
 
             $widgetRunParam = json_encode(self::encrypt($params2), JSON_THROW_ON_ERROR, 512);
-            $body[$i] = Peast::latest("widgetRunner.run($widgetRunParam)", [])->parse()->getBody()[0];
+            $repl = Peast::latest("widgetRunner.run($widgetRunParam)", [])->parse()->getBody()[0];
             if($placeHolderExprs) {
-                $args = $body[$i]->getExpression()->getArguments();
+                $args = $repl->getExpression()->getArguments();
                 $expr = new ArrayExpression();
                 $expr->setElements($placeHolderExprs);
                 $args []= $expr;
-                $body[$i]->getExpression()->setArguments($args);
+                $repl->getExpression()->setArguments($args);
             }
             $found = true;
-        }
+            return $repl->getExpression();
+        });
+        $traverser->traverse($ast);
 
         if(!$found) {
             return $onClick;
         }
 
+        $body = $ast->getBody()[0]->getBody()->getBody();
         $ast->setBody($body);
         return $ast->render(new Compact());
     }

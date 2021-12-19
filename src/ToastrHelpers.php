@@ -18,12 +18,12 @@ class ToastrHelpers
 
     public function flashError($message)
     {
-        return 'window.widgetRunner.toastrError('.json_encode($message).')';
+        return 'window.widgetRunner.toastrError('.json_encode($message).');';
     }
 
     public function flashSuccess($message)
     {
-        return 'window.widgetRunner.toastrSuccess('.json_encode($message).')';
+        return 'window.widgetRunner.toastrSuccess('.json_encode($message).');';
     }
 
 }

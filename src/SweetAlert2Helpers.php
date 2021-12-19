@@ -42,7 +42,8 @@ class SweetAlert2Helpers
 
     public function confirm($text, $to, $params = [], $options = [])
     {
-        $call = LardgetHtmlCompiler::compileCall("\$w.{$to}(value)", $this->widget->getParamsForCompiler());
+        $paramsWithoutParenthesis = preg_replace('#(^\[|]$)+#', '', json_encode($params, JSON_THROW_ON_ERROR));
+        $call = LardgetHtmlCompiler::compileCall("\$w.{$to}(value, $paramsWithoutParenthesis)", $this->widget->getParamsForCompiler());
 
         $param = [
             'title' => $text,

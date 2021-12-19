@@ -70,6 +70,19 @@ abstract class Lardget implements Htmlable
         return "document.getElementById('{$this->htmlId}').innerHTML = " . json_encode($htmlWithMethods) . ';';
     }
 
+    public function responseReplaceRef($ref, $html)
+    {
+        $html = $this->compileHtml($html);
+        return '
+            var ref = document.querySelector(' . json_encode("#{$this->htmlId} [data-ref=$ref]") . ');
+            if(ref) {
+                ref.innerHTML = ' . json_encode($html) . '
+            } else {
+                console.log("Ref was not found")
+            };
+        ';
+    }
+
     /** @noinspection MagicMethodsValidityInspection */
     public function __get($name)
     {
